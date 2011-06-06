@@ -69,6 +69,8 @@ class Vz_bad_behavior_ext {
 		$this->EE->db->insert('extensions', $data);			
 		
 		// Install Bad Behavior table
+        require_once(BB2_CWD . "/bad-behavior/version.inc.php");
+        require_once(BB2_CWD . "/bad-behavior/core.inc.php");
         bb2_install();
 	}	
 
@@ -93,7 +95,6 @@ class Vz_bad_behavior_ext {
         // Calls inward to Bad Behavor itself.
         require_once(BB2_CWD . "/bad-behavior/version.inc.php");
         require_once(BB2_CWD . "/bad-behavior/core.inc.php");
-        
         bb2_start(bb2_read_settings());
 	}
 
@@ -166,6 +167,7 @@ function bb2_email()
 function bb2_read_settings()
 {
 	$EE =& get_instance();
+	$saved_settings = array();
 	
     if (isset($EE->extensions->extensions['sessions_start']))
     {
@@ -174,7 +176,10 @@ function bb2_read_settings()
             if (isset($extension['Vz_bad_behavior_ext']))
             {
                 // Retrieve the saved settings
-                $saved_settings = $extension['Vz_bad_behavior_ext']['1'] ? unserialize($extension['Vz_bad_behavior_ext']['1']) : array();
+                if ($extension['Vz_bad_behavior_ext']['1'] != '')
+                {
+                    $saved_settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
+                }
 			}
 		}
 	}
