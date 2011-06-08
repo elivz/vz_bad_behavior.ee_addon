@@ -3,6 +3,10 @@ VZ Bad Behavior
 
 Uses the open-source [Bad Behavior](http://bad-behavior.ioerror.us/) script to block potential spammers, not only from submitting forms, but from even seeing your website. This also helps prevent email-harvesting and server overloads.
 
+Optionally, it will also check requests against [Project Honey Pot's http:BL](http://www.projecthoneypot.org/services_overview.php), a blacklist of known spammers. To use that feature, you will need to sign up for an API key.
+
+The extension settings page also displays detailed logs for the past week (which is as long as Bad Behavior stores log data). This can be useful in resolving false-positives.
+
 Installation
 ------------
 

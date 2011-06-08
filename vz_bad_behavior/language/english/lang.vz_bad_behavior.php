@@ -3,7 +3,7 @@
 $lang = array(
 
     // Settings labels
-    'fine_tuning'       => 'Fine Tuning',
+    'fine_tuning'          => 'Fine Tuning',
 	'strict'               => 'Strict Mode',
 	'strict_desc'          => 'Runs additional checks, but may block some government or corporate visitors.',
 	'offsite_forms'        => 'Allow off-site posting to forms',

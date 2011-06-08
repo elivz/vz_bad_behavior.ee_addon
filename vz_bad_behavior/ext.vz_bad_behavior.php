@@ -15,10 +15,10 @@ class Vz_bad_behavior_ext {
 	
 	public $settings 		= array();
 	public $description		= 'EE implementation of the spam-blocking Bad Behavior script.';
-	public $docs_url		= 'http://elivz.com';
+	public $docs_url		= 'http://bad-behavior.ioerror.us/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '0.9';
+	public $version			= '1.0';
 	
 	private $EE;
 	
