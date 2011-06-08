@@ -31,21 +31,16 @@ class Vz_bad_behavior_ext {
 		$this->settings = $settings;
 	}
 	
-	// ----------------------------------------------------------------------
-	
-	/**
-	 * Settings Form
-	 */
-	public function settings()
-	{
-		return array(
-        	'strict' => array('r', array('yes' => "yes", 'no' => "no"), 'no'),
-        	'httpbl_key' => '',
-        	'httpbl_threat' => '25',
-        	'httpbl_maxage' => '30',
-        	'offsite_forms' => array('r', array('yes' => "yes", 'no' => "no"), 'no')
-		);
-	}
+	private $default_settings = array(
+        'verbose' => 'n',
+        'logging' => 'y',
+        'display_stats' => 'y',
+        'strict' => 'n',
+        'httpbl_key' => '',
+        'httpbl_threat' => '25',
+        'httpbl_maxage' => '30',
+        'offsite_forms' => 'n'
+    );
 	
 	// ----------------------------------------------------------------------
 	
@@ -66,13 +61,50 @@ class Vz_bad_behavior_ext {
 			'enabled'	=> 'y'
 		);
 
-		$this->EE->db->insert('extensions', $data);			
+		$this->EE->db->insert('extensions', $data);
+        
+        // Use default settings
+    	$this->EE->db->update('extensions', array('settings' => serialize($this->default_settings)));
 		
 		// Install Bad Behavior table
         require_once(BB2_CWD . "/bad-behavior/version.inc.php");
         require_once(BB2_CWD . "/bad-behavior/core.inc.php");
-        bb2_install();
 	}	
+	
+	// ----------------------------------------------------------------------
+	
+	/**
+	 * Display Settings Form
+	 */
+    function settings_form($settings)
+    {
+        global $bb_default_settings;
+        $this->EE->load->helper('form');
+        $this->EE->load->library('table');
+		
+		return $this->EE->load->view('index', array('settings' => $settings), TRUE);
+	}
+	
+	/**
+     * Save Settings
+     */
+    function save_settings()
+    {
+    	if (empty($_POST))
+    	{
+    		show_error($this->EE->lang->line('unauthorized_access'));
+    	}
+    	
+    	unset($_POST['submit']);
+    	
+    	$this->EE->db->where('class', __CLASS__);
+    	$this->EE->db->update('extensions', array('settings' => serialize($_POST)));
+    	
+    	$this->EE->session->set_flashdata(
+    		'message_success',
+    	 	$this->EE->lang->line('preferences_updated')
+    	);
+    }
 
 	// ----------------------------------------------------------------------
 
@@ -95,6 +127,8 @@ class Vz_bad_behavior_ext {
         // Calls inward to Bad Behavor itself.
         require_once(BB2_CWD . "/bad-behavior/version.inc.php");
         require_once(BB2_CWD . "/bad-behavior/core.inc.php");
+        
+        bb2_install();
         bb2_start(bb2_read_settings());
 	}
 
@@ -166,6 +200,7 @@ function bb2_email()
 // Settings are hard-coded for non-database use
 function bb2_read_settings()
 {
+    global $bb_default_settings;
 	$EE =& get_instance();
 	$saved_settings = array();
 	
@@ -178,43 +213,26 @@ function bb2_read_settings()
                 // Retrieve the saved settings
                 if ($extension['Vz_bad_behavior_ext']['1'] != '')
                 {
-                    $saved_settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
+                    $settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
+                    
+                    // Merge in the saved settings, converting strings to booleans
+                    foreach ($settings as $key => $value)
+                    {
+                        if ($value === 'y')
+                        {
+                            $settings[$key] = true;
+                        }
+                        elseif ($value == 'n')
+                        {
+                            $settings[$key] = false;
+                        }
+                    }
+                    
+                    return $settings;
                 }
 			}
 		}
 	}
-                
-    // Settings with no interface
-    $settings = array(
-    	'log_table' => $EE->db->dbprefix . 'bad_behavior',
-        'verbose' => false,
-        'logging' => true,
-        'display_stats' => true,
-        'strict' => false,
-        'httpbl_key' => '',
-        'httpbl_threat' => '25',
-        'httpbl_maxage' => '30',
-        'offsite_forms' => false
-    );
-    
-    // Merge in the saved settings, converting strings to booleans
-    foreach ($saved_settings as $key => $value)
-    {
-        if ($value === 'y')
-        {
-            $settings[$key] = true;
-        }
-        elseif ($value == 'n')
-        {
-            $settings[$key] = false;
-        }
-        else
-        {
-            $settings[$key] = $value;
-        }
-    }
-    
-    return $settings;
 }
 
 // write settings to database
