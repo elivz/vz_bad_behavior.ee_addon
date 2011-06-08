@@ -71,7 +71,7 @@
         $this->table->add_row(
             $request['date'],
             $request['ip'],
-            $request['request_uri'],
+            array('data'=>$request['request_uri'], 'style'=>'overflow:hidden;max-width:350px', 'title'=>$request['request_uri']),
             $request['request_method'],
             $request['server_protocol'],
             $request['user_agent'],
