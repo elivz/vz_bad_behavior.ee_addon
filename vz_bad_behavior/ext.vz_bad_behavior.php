@@ -64,11 +64,21 @@ class Vz_bad_behavior_ext {
 		$this->EE->db->insert('extensions', $data);
         
         // Use default settings
+        $this->default_settings['log_table'] = $this->EE->db->dbprefix.'bad_behavior';
     	$this->EE->db->update('extensions', array('settings' => serialize($this->default_settings)));
+	}
+
+	/**
+	 * Disable Extension
+	 */
+	public function disable_extension()
+	{var_dump($this); die();
+		// Delete the bad_behavior table
+		$this->EE->db->query("DROP TABLE IF EXISTS " . $this->settings['log_table']);
 		
-		// Install Bad Behavior table
-        require_once(BB2_CWD . "/bad-behavior/version.inc.php");
-        require_once(BB2_CWD . "/bad-behavior/core.inc.php");
+		// Remove the extension settings
+		$this->EE->db->where('class', __CLASS__);
+		$this->EE->db->delete('extensions');
 	}	
 	
 	// ----------------------------------------------------------------------
@@ -81,8 +91,16 @@ class Vz_bad_behavior_ext {
         global $bb_default_settings;
         $this->EE->load->helper('form');
         $this->EE->load->library('table');
+        
+        // Get the recently blocked list
+        $blocked = $this->EE->db->query("SELECT * FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")->result_array();
 		
-		return $this->EE->load->view('index', array('settings' => $settings), TRUE);
+        $data = array(
+            'settings'  => $settings,
+            'blocked'   => array_reverse($blocked)
+        );
+		
+        return $this->EE->load->view('index', $data, true);
 	}
 	
 	/**
@@ -105,17 +123,6 @@ class Vz_bad_behavior_ext {
     	 	$this->EE->lang->line('preferences_updated')
     	);
     }
-
-	// ----------------------------------------------------------------------
-
-	/**
-	 * Disable Extension
-	 */
-	public function disable_extension()
-	{
-		$this->EE->db->where('class', __CLASS__);
-		$this->EE->db->delete('extensions');
-	}	
 	
 	// ----------------------------------------------------------------------
 	
