@@ -164,9 +164,7 @@ function bb2_db_escape($string)
 // Return the number of rows in a particular query.
 function bb2_db_num_rows($result)
 {
-	if ($result !== FALSE)
-		return $result->num_rows();
-	return 0;
+    return $result !== FALSE ? $result->num_rows() : 0;
 }
 
 // Run a query and return the results, if any.
@@ -197,13 +195,14 @@ function bb2_email()
 }
 
 // retrieve settings from database
-// Settings are hard-coded for non-database use
 function bb2_read_settings()
 {
     global $bb_default_settings;
 	$EE =& get_instance();
 	$saved_settings = array();
 	
+	// Ugh, we have to go through this whole rigamarole to get the settings,
+	// since we're not inside the extension's object.
     if (isset($EE->extensions->extensions['sessions_start']))
     {
         foreach($EE->extensions->extensions['sessions_start'] as $priority => $extension)
@@ -215,7 +214,7 @@ function bb2_read_settings()
                 {
                     $settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
                     
-                    // Merge in the saved settings, converting strings to booleans
+                    // Convert strings to booleans
                     foreach ($settings as $key => $value)
                     {
                         if ($value === 'y')
@@ -233,11 +232,15 @@ function bb2_read_settings()
 			}
 		}
 	}
+	
+	// Couldn't get the settings, oh well
+	return false;
 }
 
 // write settings to database
 function bb2_write_settings($settings)
 {
+    // Not needed, since we have a control panel for changing settings
 	return false;
 }
 
@@ -259,18 +262,9 @@ function bb2_insert_head()
 }
 
 // Display stats? This is optional.
-function bb2_insert_stats($force = false)
+function bb2_insert_stats($force = true)
 {
-	$settings = bb2_read_settings();
-
-	if ($force || $settings['display_stats'])
-	{
-		$blocked = bb2_db_query("SELECT COUNT(*) FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'");
-		if ($blocked !== FALSE)
-		{
-			echo sprintf('<p><a href="http://www.bad-behavior.ioerror.us/">%1$s</a> %2$s <strong>%3$s</strong> %4$s</p>', __('Bad Behavior'), __('has blocked'), $blocked[0]["COUNT(*)"], __('access attempts in the last 7 days.'));
-		}
-	}
+	return false;
 }
 
 // Return the top-level relative path of wherever we are (for cookies)

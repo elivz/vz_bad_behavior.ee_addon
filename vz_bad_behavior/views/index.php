@@ -9,10 +9,12 @@
     );
     $this->table->add_row(
         lang('strict', 'strict') . '<p>'.lang('strict_desc').'</p>',
+        '<input type="hidden" name="strict" value="n" />' .
         form_checkbox('strict', 'y', ($settings['strict'] == 'y'), 'id="strict"')
     );
     $this->table->add_row(
         lang('offsite_forms', 'offsite_forms') . '<p>'.lang('offsite_desc').'</p>',
+        '<input type="hidden" name="offsite_forms" value="n" />' .
         form_checkbox('offsite_forms', 'y', ($settings['offsite_forms'] == 'y'), 'id="offsite_forms"')
     );
     
