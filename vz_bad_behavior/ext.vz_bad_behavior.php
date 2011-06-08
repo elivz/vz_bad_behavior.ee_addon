@@ -72,9 +72,9 @@ class Vz_bad_behavior_ext {
 	 * Disable Extension
 	 */
 	public function disable_extension()
-	{var_dump($this); die();
+	{
 		// Delete the bad_behavior table
-		$this->EE->db->query("DROP TABLE IF EXISTS " . $this->settings['log_table']);
+		$this->EE->db->query("DROP TABLE IF EXISTS ".$this->EE->db->dbprefix.'bad_behavior');
 		
 		// Remove the extension settings
 		$this->EE->db->where('class', __CLASS__);
