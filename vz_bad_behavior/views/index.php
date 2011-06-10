@@ -44,6 +44,10 @@
 <?= $this->table->generate() ?>
 <?php $this->table->clear() ?>
 
+<?= form_hidden('logging', $settings['logging']) ?>
+<?= form_hidden('verbose', $settings['verbose']) ?>
+<?= form_hidden('log_table', $settings['log_table']) ?>
+
 <p><?=form_submit('submit', lang('submit'), 'class="submit"')?></p>
 
 <?= form_close() ?>
