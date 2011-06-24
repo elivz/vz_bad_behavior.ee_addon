@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.0.1';
+	public $version			= '1.0.2';
 	
 	private $EE;
 	
@@ -60,7 +60,26 @@ class Vz_bad_behavior_ext {
 			'version'	=> $this->version,
 			'enabled'	=> 'y'
 		);
-
+    	
+    	// Create the table for BB to store its data
+        $this->EE->db->query(
+            "CREATE TABLE IF NOT EXISTS `".$this->EE->db->dbprefix.'bad_behavior'."` (
+            `id` INT(11) NOT NULL auto_increment,
+            `ip` TEXT NOT NULL,
+            `date` DATETIME NOT NULL default '0000-00-00 00:00:00',
+            `request_method` TEXT NOT NULL,
+            `request_uri` TEXT NOT NULL,
+            `server_protocol` TEXT NOT NULL,
+            `http_headers` TEXT NOT NULL,
+            `user_agent` TEXT NOT NULL,
+            `request_entity` TEXT NOT NULL,
+            `key` TEXT NOT NULL,
+            INDEX (`ip`(15)),
+            INDEX (`user_agent`(10)),
+            PRIMARY KEY (`id`) );"
+        );
+        
+        // Enable the extension
 		$this->EE->db->insert('extensions', $data);
         
         // Use default settings
@@ -135,7 +154,6 @@ class Vz_bad_behavior_ext {
         require_once(BB2_CWD . "/bad-behavior/version.inc.php");
         require_once(BB2_CWD . "/bad-behavior/core.inc.php");
         
-        bb2_install();
         bb2_start(bb2_read_settings());
 	}
 
@@ -254,8 +272,8 @@ function bb2_write_settings($settings)
 // installation
 function bb2_install()
 {
-	$settings = bb2_read_settings();
-	bb2_db_query(bb2_table_structure($settings['log_table']));
+	// We are creating the table in the extension's "enable" function
+	return false;
 }
 
 // Screener
