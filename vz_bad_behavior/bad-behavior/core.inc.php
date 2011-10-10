@@ -120,7 +120,7 @@ function bb2_start($settings)
 	$request_method = $_SERVER['REQUEST_METHOD'];
 	$request_uri = $_SERVER['REQUEST_URI'];
 	if (!$request_uri) $request_uri = $_SERVER['SCRIPT_NAME'];	# IIS
-	$server_protocol = $_SERVER['SERVER_PROTOCOL'];
+	$server_protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '';
 	@$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 	// Reconstruct the HTTP entity, if present.
@@ -165,7 +165,7 @@ function bb2_start($settings)
 			bb2_test($settings, $package, bb2_msnbot($package));
 			bb2_approved($settings, $package);
 			return true;
-		} elseif (stripos($ua, "Googlebot") !== FALSE || stripos($ua, "Mediapartners-Google") !== FALSE) {
+		} elseif (stripos($ua, "Googlebot") !== FALSE || stripos($ua, "Mediapartners-Google") !== FALSE || stripos($ua, "Google Web Preview") !== FALSE) {
 			require_once(BB2_CORE . "/google.inc.php");
 			bb2_test($settings, $package, bb2_google($package));
 			bb2_approved($settings, $package);
