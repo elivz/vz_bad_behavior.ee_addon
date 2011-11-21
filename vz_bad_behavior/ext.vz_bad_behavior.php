@@ -61,6 +61,9 @@ class Vz_bad_behavior_ext {
 			'version'	=> $this->version,
 			'enabled'	=> 'y'
 		);
+        
+        // Enable the extension
+		$this->EE->db->insert('extensions', $data);
     	
     	// Create the table for BB to store its data
         $this->EE->db->query(
@@ -79,9 +82,6 @@ class Vz_bad_behavior_ext {
             INDEX (`user_agent`(10)),
             PRIMARY KEY (`id`) );"
         );
-        
-        // Enable the extension
-		$this->EE->db->insert('extensions', $data);
 	}
 
 	/**
