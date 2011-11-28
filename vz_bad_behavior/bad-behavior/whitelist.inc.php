@@ -1,9 +1,14 @@
 <?php if (!defined('BB2_CORE')) die('I said no cheating!');
 
-function bb2_whitelist($package)
+function bb2_whitelist($package, $settings)
 {
-	$whitelists = @parse_ini_file(dirname(BB2_CORE) . "/whitelist.ini");
-
+	
+	/* ADDED: Get IP whitelist from the database */
+	//$whitelists = @parse_ini_file(dirname(BB2_CORE) . "/whitelist.ini");
+	if (!empty($settings['whitelisted_ips'])) {
+    	$whitelists['ip'] = explode("\n", $settings['whitelisted_ips']);
+    }
+    
 	if (@!empty($whitelists['ip'])) {
 		foreach ($whitelists['ip'] as $range) {
 			if (match_cidr($package['ip'], $range)) return true;

@@ -17,6 +17,10 @@
         '<input type="hidden" name="offsite_forms" value="n" />' .
         form_checkbox('offsite_forms', 'y', ($settings['offsite_forms'] == 'y'), 'id="offsite_forms"')
     );
+    $this->table->add_row(
+        lang('whitelisted_ips', 'whitelisted_ips') . '<p>'.lang('whitelist_desc').'</p>',
+        form_textarea('whitelisted_ips', $settings['whitelisted_ips'], 'id="whitelisted_ips"')
+    );
     
     echo $this->table->generate();
     $this->table->clear();

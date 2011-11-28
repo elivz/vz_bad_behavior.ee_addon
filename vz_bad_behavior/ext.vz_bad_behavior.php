@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.0.4';
+	public $version			= '1.1';
 	
 	private $EE;
 	
@@ -39,7 +39,8 @@ class Vz_bad_behavior_ext {
         'httpbl_key' => '',
         'httpbl_threat' => '25',
         'httpbl_maxage' => '30',
-        'offsite_forms' => 'n'
+        'offsite_forms' => 'n',
+        'whitelisted_ips' => ''
     );
 	
 	// ----------------------------------------------------------------------
@@ -95,7 +96,7 @@ class Vz_bad_behavior_ext {
 		// Remove the extension settings
 		$this->EE->db->where('class', __CLASS__);
 		$this->EE->db->delete('extensions');
-	}	
+	}
 	
 	// ----------------------------------------------------------------------
 	
@@ -104,12 +105,14 @@ class Vz_bad_behavior_ext {
 	 */
     function settings_form($settings)
     {
-        global $bb_default_settings;
         $this->EE->load->helper('form');
         $this->EE->load->library('table');
         
         // Get the recently blocked list
         $blocked = $this->EE->db->query("SELECT * FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")->result_array();
+		
+		// Merge with the default settings to prevent upgrade errors
+		$settings = array_merge($this->default_settings, $settings);
 		
         $data = array(
             'settings'  => $settings,
@@ -143,12 +146,11 @@ class Vz_bad_behavior_ext {
 	// ----------------------------------------------------------------------
 	
 	/**
-	 * bad_behavior
+	 * Start Bad Behavior
 	 */
 	public function bad_behavior()
 	{
         // Calls inward to Bad Behavor itself.
-        require_once(BB2_CWD . "/bad-behavior/version.inc.php");
         require_once(BB2_CWD . "/bad-behavior/core.inc.php");
         
         bb2_start(bb2_read_settings());
@@ -219,7 +221,6 @@ function bb2_email()
 // retrieve settings from database
 function bb2_read_settings()
 {
-    global $bb_default_settings;
 	$EE =& get_instance();
 	$saved_settings = array();
 	

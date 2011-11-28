@@ -8,6 +8,8 @@ $lang = array(
 	'strict_desc'          => 'Runs additional checks, but may block some government or corporate visitors.',
 	'offsite_forms'        => 'Allow off-site posting to forms',
 	'offsite_desc'         => 'Usually only needed if you support OpenID or are running an API that accepts form data from other websites.',
+	'whitelisted_ips'      => 'Whitelisted IPs',
+	'whitelist_desc'       => 'Visitors from these IP addresses will always be allowed in. One IP address per line.',
 	
 	'httpbl'               => 'http:BL Settings',
 	'httpbl_key'           => 'http:BL API Key',

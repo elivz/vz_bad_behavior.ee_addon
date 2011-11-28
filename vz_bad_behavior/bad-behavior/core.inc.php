@@ -80,7 +80,7 @@ function bb2_start($settings)
 	$request_uri = $_SERVER["REQUEST_URI"];
 	if (!$request_uri) $request_uri = $_SERVER['SCRIPT_NAME'];	# IIS
 
-	if ($settings['reverse_proxy']) {
+	if (!empty($settings['reverse_proxy'])) {
 		$headers['X-Bad-Behavior-Remote-Address'] = $_SERVER['REMOTE_ADDR'];
 		$headers_mixed['X-Bad-Behavior-Remote-Address'] = $_SERVER['REMOTE_ADDR'];
 		$ip = bb2_reverse_proxy($settings, $headers_mixed);
@@ -114,7 +114,7 @@ function bb2_screen($settings, $package)
 
 	// First check the whitelist
 	require_once(BB2_CORE . "/whitelist.inc.php");
-	if (!bb2_whitelist($package)) {
+	if (!bb2_whitelist($package, $settings)) {
 		// Now check the blacklist
 		require_once(BB2_CORE . "/blacklist.inc.php");
 		if ($r = bb2_blacklist($package)) return $r;
