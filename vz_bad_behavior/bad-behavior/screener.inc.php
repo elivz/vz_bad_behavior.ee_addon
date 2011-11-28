@@ -60,4 +60,3 @@ function bb2_screener($settings, $package)
 	bb2_screener_cookie($settings, $package, BB2_COOKIE, $cookie_value);
 	bb2_screener_javascript($settings, $package, BB2_COOKIE, $cookie_value);
 }
-?>
