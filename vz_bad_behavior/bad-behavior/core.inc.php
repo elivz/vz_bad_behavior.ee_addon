@@ -1,5 +1,5 @@
 <?php if (!defined('BB2_CWD')) die("I said no cheating!");
-define('BB2_VERSION', "2.1.15");
+define('BB2_VERSION', "2.2.0");
 
 // Bad Behavior entry point is bb2_start()
 // If you're reading this, you are probably lost.
@@ -44,7 +44,9 @@ function bb2_approved($settings, $package)
 function bb2_reverse_proxy($settings, $headers_mixed)
 {
 	$addrs = array_reverse(preg_split("/[\s,]+/", $headers_mixed[$settings['reverse_proxy_header']]));
-	if (!empty($settings['reverse_proxy_addresses'])) {
+	if (empty($addrs)) {
+		$addrs[] = $_SERVER['REMOTE_ADDR'];
+	} else if (!empty($settings['reverse_proxy_addresses'])) {
 		foreach ($addrs as $addr) {
 			if (!match_cidr($addr, $settings['reverse_proxy_addresses'])) {
 				return $addr;
