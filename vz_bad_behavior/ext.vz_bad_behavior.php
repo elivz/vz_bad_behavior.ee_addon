@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.1.2';
+	public $version			= '1.2';
 	
 	private $EE;
 	
@@ -40,7 +40,8 @@ class Vz_bad_behavior_ext {
         'httpbl_threat' => '25',
         'httpbl_maxage' => '30',
         'offsite_forms' => 'n',
-        'whitelisted_ips' => ''
+        'whitelisted_ips' => '',
+        'whitelisted_urls' => ''
     );
 	
 	// ----------------------------------------------------------------------
@@ -134,6 +135,10 @@ class Vz_bad_behavior_ext {
     	
     	unset($_POST['submit']);
     	
+    	// Otherwise EE strips out the escaping in the regex patterns
+    	$_POST['whitelisted_urls'] = addslashes($_POST['whitelisted_urls']);
+    	
+    	// Save the settings to the database
     	$this->EE->db->where('class', __CLASS__);
     	$this->EE->db->update('extensions', array('settings' => serialize($_POST)));
     	

@@ -9,7 +9,9 @@ $lang = array(
 	'offsite_forms'        => 'Allow off-site posting to forms',
 	'offsite_desc'         => 'Usually only needed if you support OpenID or are running an API that accepts form data from other websites.',
 	'whitelisted_ips'      => 'Whitelisted IPs',
-	'whitelist_desc'       => 'Visitors from these IP addresses will always be allowed in. One IP address per line.',
+	'whitelist_ips_desc'   => 'Visitors from these IP addresses will always be allowed. One IP address per line.',
+	'whitelisted_urls'     => 'Whitelisted URIs',
+	'whitelist_urls_desc'  => 'Visits to these urls will always be allowed. One URI (or partial URI) per line. You may also enclose a pattern with tildes to perform regular expression matching, e.g. <code>~/blog/\\\d{4}(/\\\d{2})?$~i</code><br/><br/>Note that the trailing slash (if there is one) is stripped before matching.',
 	
 	'httpbl'               => 'http:BL Settings',
 	'httpbl_key'           => 'http:BL API Key',

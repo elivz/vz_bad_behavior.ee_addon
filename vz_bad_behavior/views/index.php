@@ -18,8 +18,12 @@
         form_checkbox('offsite_forms', 'y', ($settings['offsite_forms'] == 'y'), 'id="offsite_forms"')
     );
     $this->table->add_row(
-        lang('whitelisted_ips', 'whitelisted_ips') . '<p>'.lang('whitelist_desc').'</p>',
-        form_textarea('whitelisted_ips', $settings['whitelisted_ips'], 'id="whitelisted_ips"')
+        lang('whitelisted_ips', 'whitelisted_ips') . '<p>'.lang('whitelist_ips_desc').'</p>',
+        form_textarea(array('name'=>'whitelisted_ips', 'value'=>$settings['whitelisted_ips'], 'id'=>'whitelisted_ips', 'rows'=>'5'))
+    );
+    $this->table->add_row(
+        lang('whitelisted_urls', 'whitelisted_urls') . '<p>'.lang('whitelist_urls_desc').'</p>',
+        form_textarea(array('name'=>'whitelisted_urls', 'value'=>$settings['whitelisted_urls'], 'id'=>'whitelisted_urls', 'rows'=>'5'))
     );
     
     echo $this->table->generate();
