@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.2';
+	public $version			= '1.2.1';
 	
 	private $EE;
 	
@@ -110,17 +110,17 @@ class Vz_bad_behavior_ext {
         $this->EE->load->library('table');
         
         // Get the recently blocked list
-        $blocked = $this->EE->db->query("SELECT * FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")->result_array();
-		
+        $blocked = $this->EE->db->query("SELECT COUNT(*) as count FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")->row('count');
+        
 		// Merge with the default settings to prevent upgrade errors
 		$settings = array_merge($this->default_settings, $settings);
 		
         $data = array(
-            'settings'  => $settings,
-            'blocked'   => array_reverse($blocked)
+            'settings'      => $settings,
+            'blocked_count' => $blocked
         );
 		
-        return $this->EE->load->view('index', $data, true);
+        return $this->EE->load->view('index', $data, TRUE);
 	}
 	
 	/**
@@ -155,13 +155,40 @@ class Vz_bad_behavior_ext {
 	 */
 	public function bad_behavior()
 	{
-        // Calls inward to Bad Behavor itself.
-        require_once(BB2_CWD . "/bad-behavior/core.inc.php");
-        
-        bb2_start(bb2_read_settings());
+        // Check for the special query string that means we want the log
+        if ( isset($_GET['bb_logs']) )
+        {
+            echo $this->_logs();
+            
+            // Kill further processing
+            die();
+        }
+        else
+        {
+            // Calls inward to Bad Behavor itself.
+            require_once(BB2_CWD . "/bad-behavior/core.inc.php");
+            bb2_start(bb2_read_settings());
+        }
 	}
 
 	// ----------------------------------------------------------------------
+	
+	/**
+	 * Output the logs
+	 */
+    private function _logs()
+    {
+        $this->EE->load->library('table');
+        $this->EE->lang->loadfile('vz_bad_behavior');
+        
+        // Get the recently blocked list
+        $blocked = $this->EE->db->query("SELECT * FROM " . $this->settings['log_table'] . " WHERE `key` NOT LIKE '00000000' ORDER BY `date` DESC")->result_array();
+        $data = array(
+            'blocked' => $blocked
+        );
+		
+        return $this->EE->load->view('logs', $data, TRUE);
+    }
 }
 
 
@@ -271,11 +298,11 @@ function bb2_read_settings()
                     {
                         if ($value === 'y')
                         {
-                            $settings[$key] = true;
+                            $settings[$key] = TRUE;
                         }
                         elseif ($value == 'n')
                         {
-                            $settings[$key] = false;
+                            $settings[$key] = FALSE;
                         }
                     }
                     
@@ -286,21 +313,21 @@ function bb2_read_settings()
 	}
 	
 	// Couldn't get the settings, oh well
-	return false;
+	return FALSE;
 }
 
 // write settings to database
 function bb2_write_settings($settings)
 {
     // Not needed, since we have a control panel for changing settings
-	return false;
+	return FALSE;
 }
 
 // installation
 function bb2_install()
 {
 	// We are creating the table in the extension's "enable" function
-	return false;
+	return FALSE;
 }
 
 // Screener
@@ -314,9 +341,9 @@ function bb2_insert_head()
 }
 
 // Display stats? This is optional.
-function bb2_insert_stats($force = true)
+function bb2_insert_stats($force = TRUE)
 {
-	return false;
+	return FALSE;
 }
 
 // Return the top-level relative path of wherever we are (for cookies)

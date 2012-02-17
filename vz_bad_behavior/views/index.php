@@ -62,39 +62,22 @@
 
 <!-- Blocked visits report -->
 
-<h2 style="padding:30px 0 10px"><?php printf(lang('num_blocked'), count($blocked)) ?></h2>
+<h2 style="padding:30px 0 10px"><?php printf(lang('num_blocked'), $blocked_count) ?></h2>
 
-<p><a href="#" onclick="$(this).parent().hide();$('#bb_logs').slideDown();return false;"><?= lang('display_logs') ?></a></p>
-<div id="bb_logs" style="display:none;">
-<?php
-    $this->table->set_template($cp_pad_table_template);
-    $this->table->set_heading(
-        lang('date'),
-        lang('ip'),
-        lang('uri'),
-        lang('method'),
-        lang('protocol'),
-        lang('user_agent'),
-        lang('key')
-    );
-
-    foreach ($blocked as $request)
-    {
-        $this->table->add_row(
-            $request['date'],
-            $request['ip'],
-            array('data'=>$request['request_uri'], 'style'=>'overflow:hidden;max-width:350px', 'title'=>$request['request_uri']),
-            $request['request_method'],
-            $request['server_protocol'],
-            $request['user_agent'],
-            '<a href="http://ioerror.us/bb2-support-key?key='.$request['key'].'" target="_blank">'.$request['key'].'</a>'
+<p><a href="#" id="show_bb_logs"><?= lang('display_logs') ?></a></p>
+<div id="bb_logs" style="display:none"></div>
+<script type="text/javascript">
+    $('#show_bb_logs').click(function() {
+        $(this).parent().hide();
+        $('#bb_logs').load(
+            '<?= preg_replace('/\?.*/', '', BASE) ?>?bb_logs=1',
+            function() {
+                $('#bb_logs').slideDown();
+            }
         );
-    }
-?>
-
-<?= $this->table->generate() ?>
-<?php $this->table->clear() ?>
-</div>
+        return false;
+    })
+</script>
 
 <?php
 /* End of file index.php */
