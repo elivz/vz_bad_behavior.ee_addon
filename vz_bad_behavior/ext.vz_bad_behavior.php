@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.2.1';
+	public $version			= '1.2.2';
 	
 	private $EE;
 	
@@ -86,6 +86,20 @@ class Vz_bad_behavior_ext {
         );
 	}
 
+    /**
+     * Update Extension
+     */
+    function update_extension($current = '')
+    {
+        if ($current == '' OR $current == $this->version)
+        {
+            return FALSE;
+        }
+    
+        $this->EE->db->where('class', __CLASS__);
+        $this->EE->db->update('extensions', array('version' => $this->version));
+    }
+
 	/**
 	 * Disable Extension
 	 */
@@ -116,6 +130,7 @@ class Vz_bad_behavior_ext {
 		$settings = array_merge($this->default_settings, $settings);
 		
         $data = array(
+            'base_url'      => $this->EE->functions->fetch_site_index(),
             'settings'      => $settings,
             'blocked_count' => $blocked
         );
@@ -153,10 +168,10 @@ class Vz_bad_behavior_ext {
 	/**
 	 * Start Bad Behavior
 	 */
-	public function bad_behavior()
+	public function bad_behavior($session)
 	{
         // Check for the special query string that means we want the log
-        if ( isset($_GET['bb_logs']) )
+        if ( isset($_GET['bb_logs']) && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior') )
         {
             echo $this->_logs();
             

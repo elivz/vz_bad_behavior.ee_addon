@@ -70,7 +70,7 @@
     $('#show_bb_logs').click(function() {
         $(this).parent().hide();
         $('#bb_logs').load(
-            '<?= preg_replace('/\?.*/', '', BASE) ?>?bb_logs=1',
+            '<?= $base_url ?>?bb_logs=1',
             function() {
                 $('#bb_logs').slideDown();
             }
