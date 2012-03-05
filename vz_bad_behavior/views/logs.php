@@ -1,20 +1,20 @@
-<table class="mainTable padTable" cellpadding="0" cellspacing="0" border="0">
+<div class="mor"><table class="mainTable padTable col-sortable NSM_Stripeable" cellpadding="0" cellspacing="0" border="0">
     <thead>
-            <th><?= lang('date') ?></th>
-            <th><?= lang('ip') ?></th>
-            <th><?= lang('uri') ?></th>
-            <th><?= lang('method') ?></th>
-            <th><?= lang('protocol') ?></th>
-            <th><?= lang('user_agent') ?></th>
-            <th><?= lang('key') ?></th>
+            <th scope="col"><?= lang('date') ?></th>
+            <th scope="col"><?= lang('ip') ?></th>
+            <th scope="col"><?= lang('uri') ?></th>
+            <th scope="col"><?= lang('method') ?></th>
+            <th scope="col"><?= lang('protocol') ?></th>
+            <th scope="col"><?= lang('user_agent') ?></th>
+            <th scope="col"><?= lang('key') ?></th>
     </thead>
     
     <tbody>
-    <?php foreach ($blocked as $request) : ?>
-        <tr>
+    <?php foreach ($blocked as $i => $request) : ?>
+        <tr<?php if ($i % 2 == 0) echo ' class="odd"' ?>>
             <td><?= $request['date'] ?></td>
             <td><?= $request['ip'] ?></td>
-            <td><?= array('data'=>$request['request_uri'], 'style'=>'overflow:hidden;max-width:350px', 'title'=>$request['request_uri']) ?></td>
+            <td style="overflow:hidden;max-width:350px" title"<?= $request['request_uri'] ?>"><?= $request['request_uri'] ?></td>
             <td><?= $request['request_method'] ?></td>
             <td><?= $request['server_protocol'] ?></td>
             <td><?= $request['user_agent'] ?></td>
@@ -22,7 +22,7 @@
         </tr>
     <?php endforeach; ?>
     </tbody>
-</table>
+</table></div>
 
 <?php
 /* End of file index.php */

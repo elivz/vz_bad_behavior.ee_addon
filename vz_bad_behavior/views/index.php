@@ -72,6 +72,7 @@
         $('#bb_logs').load(
             '<?= $base_url ?>?bb_logs=1',
             function() {
+                $("table.col-sortable").tablesorter();
                 $('#bb_logs').slideDown();
             }
         );
