@@ -1,4 +1,4 @@
-<div class="mor"><table class="mainTable padTable col-sortable NSM_Stripeable" cellpadding="0" cellspacing="0" border="0">
+<table class="mainTable padTable col-sortable" cellpadding="0" cellspacing="0" border="0">
     <thead>
             <th scope="col"><?= lang('date') ?></th>
             <th scope="col"><?= lang('ip') ?></th>
@@ -22,7 +22,7 @@
         </tr>
     <?php endforeach; ?>
     </tbody>
-</table></div>
+</table>
 
 <?php
 /* End of file index.php */

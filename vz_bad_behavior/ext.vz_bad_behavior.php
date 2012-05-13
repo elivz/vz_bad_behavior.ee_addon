@@ -173,7 +173,7 @@ class Vz_bad_behavior_ext {
 	public function bad_behavior($session)
 	{
         // Check for the special query string that means we want the log
-        if ( isset($_GET['bb_logs']) && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior') )
+        if ( isset($_GET['bb_logs']) && AJAX_REQUEST && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior') )
         {
             echo $this->_logs();
             
