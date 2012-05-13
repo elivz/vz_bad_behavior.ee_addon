@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
 	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
 	public $name			= 'VZ Bad Behavior';
 	public $settings_exist	= 'y';
-	public $version			= '1.2.3';
+	public $version			= '1.3.0';
 	
 	private $EE;
 	
@@ -41,7 +41,7 @@ class Vz_bad_behavior_ext {
         'httpbl_maxage' => '30',
         'offsite_forms' => 'n',
         'whitelisted_ips' => '',
-        'whitelisted_urls' => ''
+        'whitelisted_urls' => '',
     );
 	
 	// ----------------------------------------------------------------------
@@ -89,7 +89,7 @@ class Vz_bad_behavior_ext {
     /**
      * Update Extension
      */
-    function update_extension($current = '')
+    public function update_extension($current = '')
     {
         if ($current == '' OR $current == $this->version)
         {
@@ -118,13 +118,15 @@ class Vz_bad_behavior_ext {
 	/**
 	 * Display Settings Form
 	 */
-    function settings_form($settings)
+    public function settings_form($settings)
     {
         $this->EE->load->helper('form');
         $this->EE->load->library('table');
         
         // Get the recently blocked list
-        $blocked = $this->EE->db->query("SELECT COUNT(*) as count FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")->row('count');
+        $blocked = $this->EE->db
+            ->query("SELECT COUNT(*) as count FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")
+            ->row('count');
         
 		// Merge with the default settings to prevent upgrade errors
 		$settings = array_merge($this->default_settings, $settings);
@@ -141,7 +143,7 @@ class Vz_bad_behavior_ext {
 	/**
      * Save Settings
      */
-    function save_settings()
+    public function save_settings()
     {
     	if (empty($_POST))
     	{
@@ -289,6 +291,15 @@ function bb2_email()
 	return $EE->config->item('webmaster_email');
 }
 
+// retrieve whitelist
+function bb2_read_whitelist() {
+    $settings = bb2_read_settings();
+    return array(
+	   'ip' => explode("\n", $settings['whitelisted_ips']),
+	   'url' => explode("\n", $settings['whitelisted_urls'])
+    );
+}
+
 // retrieve settings from database
 function bb2_read_settings()
 {
@@ -320,6 +331,9 @@ function bb2_read_settings()
                             $settings[$key] = FALSE;
                         }
                     }
+                    
+                    // TODO: Implement the reverse_proxy option in CP
+                    $settings['reverse_proxy'] = FALSE;
                     
                     return $settings;
                 }
