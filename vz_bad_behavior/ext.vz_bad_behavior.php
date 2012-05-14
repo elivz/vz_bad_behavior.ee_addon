@@ -291,15 +291,6 @@ function bb2_email()
 	return $EE->config->item('webmaster_email');
 }
 
-// retrieve whitelist
-function bb2_read_whitelist() {
-    $settings = bb2_read_settings();
-    return array(
-	   'ip' => explode("\n", $settings['whitelisted_ips']),
-	   'url' => explode("\n", $settings['whitelisted_urls'])
-    );
-}
-
 // retrieve settings from database
 function bb2_read_settings()
 {
@@ -343,6 +334,15 @@ function bb2_read_settings()
 	
 	// Couldn't get the settings, oh well
 	return FALSE;
+}
+
+// retrieve whitelist
+function bb2_read_whitelist() {
+    $settings = bb2_read_settings();
+    return array(
+	   'ip' => array_filter(explode("\n", $settings['whitelisted_ips'])),
+	   'url' => array_filter(explode("\n", $settings['whitelisted_urls']))
+    );
 }
 
 // write settings to database
