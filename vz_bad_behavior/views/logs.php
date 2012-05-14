@@ -1,6 +1,6 @@
 <table class="mainTable padTable col-sortable" cellpadding="0" cellspacing="0" border="0">
     <thead>
-            <th scope="col"><?= lang('date') ?></th>
+            <th scope="col" class="headerSortDown"><?= lang('date') ?></th>
             <th scope="col"><?= lang('ip') ?></th>
             <th scope="col"><?= lang('uri') ?></th>
             <th scope="col"><?= lang('method') ?></th>
