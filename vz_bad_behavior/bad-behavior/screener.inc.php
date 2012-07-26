@@ -4,14 +4,10 @@
 
 function bb2_screener_cookie($settings, $package, $cookie_name, $cookie_value)
 {
-	// CHANGED: Use EE's set_cookie method, so the cookie consent module works
-	$EE =& get_instance();
-	$EE->functions->set_cookie($cookie_name, $cookie_value, 0);
-/*
+	// FIXME: Set the real cookie
 	if (!$settings['eu_cookie']) {
 		setcookie($cookie_name, $cookie_value, 0, bb2_relative_path());
 	}
-*/
 }
 
 function bb2_screener_javascript($settings, $package, $cookie_name, $cookie_value)
