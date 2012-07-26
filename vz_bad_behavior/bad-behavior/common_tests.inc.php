@@ -111,7 +111,7 @@ function bb2_misc_headers($settings, $package)
 			return "b0924802";
 		}
 	}
-	
+
 
 	// Headers which are not seen from normal user agents; only malicious bots
 	if (array_key_exists('X-Aaaaaaaaaaaa', $package['headers_mixed']) || array_key_exists('X-Aaaaaaaaaa', $package['headers_mixed'])) {
@@ -137,7 +137,7 @@ function bb2_misc_headers($settings, $package)
 			return "45b35e30";
 		}
 	}
-	
+
 	// "uk" is not a language (ISO 639) nor a country (ISO 3166)
 	// oops, yes it is :( Please shoot any Ukrainian spammers you see.
 #	if (preg_match('/\buk\b/', $package['headers_mixed']['Accept-Language'])) {

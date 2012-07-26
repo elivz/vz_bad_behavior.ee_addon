@@ -4,34 +4,34 @@ define('BB2_CWD', dirname(__FILE__));
 /**
  * VZ Bad Behavior Extension
  *
- * @package		ExpressionEngine
- * @subpackage	Addons
- * @category	Extension
- * @author		Eli Van Zoeren
- * @link		http://elivz.com
+ * @package     ExpressionEngine
+ * @subpackage  Addons
+ * @category    Extension
+ * @author      Eli Van Zoeren
+ * @link        http://elivz.com
  */
 
 class Vz_bad_behavior_ext {
-	
-	public $settings 		= array();
-	public $description		= 'EE implementation of the spam-blocking Bad Behavior script.';
-	public $docs_url		= 'http://elivz.com/blog/single/bad_behavior/';
-	public $name			= 'VZ Bad Behavior';
-	public $settings_exist	= 'y';
-	public $version			= '1.3.0';
-	
-	private $EE;
-	
-	/**
-	 * Constructor
-	 */
-	public function __construct($settings = '')
-	{
-		$this->EE =& get_instance();
-		$this->settings = $settings;
-	}
-	
-	private $default_settings = array(
+
+    public $settings        = array();
+    public $description     = 'EE implementation of the spam-blocking Bad Behavior script.';
+    public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
+    public $name            = 'VZ Bad Behavior';
+    public $settings_exist  = 'y';
+    public $version         = '1.3.0';
+
+    private $EE;
+
+    /**
+     * Constructor
+     */
+    public function __construct($settings = '')
+    {
+        $this->EE =& get_instance();
+        $this->settings = $settings;
+    }
+
+    private $default_settings = array(
         'verbose' => 'n',
         'logging' => 'y',
         'display_stats' => 'y',
@@ -43,31 +43,31 @@ class Vz_bad_behavior_ext {
         'whitelisted_ips' => '',
         'whitelisted_urls' => '',
     );
-	
-	// ----------------------------------------------------------------------
-	
-	/**
-	 * Activate Extension
-	 */
-	public function activate_extension()
-	{
-		// Setup custom settings in this array.
-		$this->settings = $this->default_settings;
+
+    // ----------------------------------------------------------------------
+
+    /**
+     * Activate Extension
+     */
+    public function activate_extension()
+    {
+        // Setup custom settings in this array.
+        $this->settings = $this->default_settings;
         $this->settings['log_table'] = $this->EE->db->dbprefix.'bad_behavior';
-		
-		$data = array(
-			'class'		=> __CLASS__,
-			'method'	=> 'bad_behavior',
-			'hook'		=> 'sessions_start',
-			'settings'	=> serialize($this->settings),
-			'version'	=> $this->version,
-			'enabled'	=> 'y'
-		);
-        
+
+        $data = array(
+            'class'     => __CLASS__,
+            'method'    => 'bad_behavior',
+            'hook'      => 'sessions_start',
+            'settings'  => serialize($this->settings),
+            'version'   => $this->version,
+            'enabled'   => 'y'
+        );
+
         // Enable the extension
-		$this->EE->db->insert('extensions', $data);
-    	
-    	// Create the table for BB to store its data
+        $this->EE->db->insert('extensions', $data);
+
+        // Create the table for BB to store its data
         $this->EE->db->query(
             "CREATE TABLE IF NOT EXISTS `".$this->EE->db->dbprefix.'bad_behavior'."` (
             `id` INT(11) NOT NULL auto_increment,
@@ -84,7 +84,7 @@ class Vz_bad_behavior_ext {
             INDEX (`user_agent`(10)),
             PRIMARY KEY (`id`) );"
         );
-	}
+    }
 
     /**
      * Update Extension
@@ -95,88 +95,88 @@ class Vz_bad_behavior_ext {
         {
             return FALSE;
         }
-    
+
         $this->EE->db->where('class', __CLASS__);
         $this->EE->db->update('extensions', array('version' => $this->version));
     }
 
-	/**
-	 * Disable Extension
-	 */
-	public function disable_extension()
-	{
-		// Delete the bad_behavior table
-		$this->EE->db->query("DROP TABLE IF EXISTS ".$this->EE->db->dbprefix.'bad_behavior');
-		
-		// Remove the extension settings
-		$this->EE->db->where('class', __CLASS__);
-		$this->EE->db->delete('extensions');
-	}
-	
-	// ----------------------------------------------------------------------
-	
-	/**
-	 * Display Settings Form
-	 */
+    /**
+     * Disable Extension
+     */
+    public function disable_extension()
+    {
+        // Delete the bad_behavior table
+        $this->EE->db->query("DROP TABLE IF EXISTS ".$this->EE->db->dbprefix.'bad_behavior');
+
+        // Remove the extension settings
+        $this->EE->db->where('class', __CLASS__);
+        $this->EE->db->delete('extensions');
+    }
+
+    // ----------------------------------------------------------------------
+
+    /**
+     * Display Settings Form
+     */
     public function settings_form($settings)
     {
         $this->EE->load->helper('form');
         $this->EE->load->library('table');
-        
+
         // Get the recently blocked list
         $blocked = $this->EE->db
             ->query("SELECT COUNT(*) as count FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")
             ->row('count');
-        
-		// Merge with the default settings to prevent upgrade errors
-		$settings = array_merge($this->default_settings, $settings);
-		
+
+        // Merge with the default settings to prevent upgrade errors
+        $settings = array_merge($this->default_settings, $settings);
+
         $data = array(
-            'base_url'      => $this->EE->functions->fetch_site_index(),
+            'base_url'      => preg_replace("/https?:/", '', $this->EE->functions->fetch_site_index()),
             'settings'      => $settings,
             'blocked_count' => $blocked
         );
-		
+
         return $this->EE->load->view('index', $data, TRUE);
-	}
-	
-	/**
+    }
+
+    /**
      * Save Settings
      */
     public function save_settings()
     {
-    	if (empty($_POST))
-    	{
-    		show_error($this->EE->lang->line('unauthorized_access'));
-    	}
-    	
-    	unset($_POST['submit']);
-    	
-    	// Otherwise EE strips out the escaping in the regex patterns
-    	$_POST['whitelisted_urls'] = addslashes($_POST['whitelisted_urls']);
-    	
-    	// Save the settings to the database
-    	$this->EE->db->where('class', __CLASS__);
-    	$this->EE->db->update('extensions', array('settings' => serialize($_POST)));
-    	
-    	$this->EE->session->set_flashdata(
-    		'message_success',
-    	 	$this->EE->lang->line('preferences_updated')
-    	);
+        if (empty($_POST))
+        {
+            show_error($this->EE->lang->line('unauthorized_access'));
+        }
+
+        unset($_POST['submit']);
+
+        // Otherwise EE strips out the escaping in the regex patterns
+        $_POST['whitelisted_urls'] = addslashes($_POST['whitelisted_urls']);
+
+        // Save the settings to the database
+        $this->EE->db->where('class', __CLASS__);
+        $this->EE->db->update('extensions', array('settings' => serialize($_POST)));
+
+        $this->EE->session->set_flashdata(
+            'message_success',
+            $this->EE->lang->line('preferences_updated')
+        );
     }
-	
-	// ----------------------------------------------------------------------
-	
-	/**
-	 * Start Bad Behavior
-	 */
-	public function bad_behavior($session)
-	{
+
+    // ----------------------------------------------------------------------
+
+    /**
+     * Start Bad Behavior
+     */
+    public function bad_behavior($session)
+    {
         // Check for the special query string that means we want the log
         if ( isset($_GET['bb_logs']) && AJAX_REQUEST && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior') )
         {
             echo $this->_logs();
-            
+
             // Kill further processing
             die();
         }
@@ -186,24 +186,24 @@ class Vz_bad_behavior_ext {
             require_once(BB2_CWD . "/bad-behavior/core.inc.php");
             bb2_start(bb2_read_settings());
         }
-	}
+    }
 
-	// ----------------------------------------------------------------------
-	
-	/**
-	 * Output the logs
-	 */
+    // ----------------------------------------------------------------------
+
+    /**
+     * Output the logs
+     */
     private function _logs()
     {
         $this->EE->load->library('table');
         $this->EE->lang->loadfile('vz_bad_behavior');
-        
+
         // Get the recently blocked list
         $blocked = $this->EE->db->query("SELECT * FROM " . $this->settings['log_table'] . " WHERE `key` NOT LIKE '00000000' ORDER BY `date` DESC")->result_array();
         $data = array(
             'blocked' => $blocked
         );
-		
+
         return $this->EE->load->view('logs', $data, TRUE);
     }
 }
@@ -216,22 +216,22 @@ class Vz_bad_behavior_ext {
 // Return current time in the format preferred by your database.
 function bb2_db_date()
 {
-	$EE =& get_instance();
-	return gmdate('Y-m-d H:i:s', $EE->localize->now);
+    $EE =& get_instance();
+    return gmdate('Y-m-d H:i:s', $EE->localize->now);
 }
 
 // Return affected rows from most recent query.
 function bb2_db_affected_rows()
 {
-	$EE =& get_instance();
-	return $EE->db->affected_rows();
+    $EE =& get_instance();
+    return $EE->db->affected_rows();
 }
 
 // Escape a string for database usage
 function bb2_db_escape($string)
 {
-	$EE =& get_instance();
-	return $EE->db->escape_str($string);
+    $EE =& get_instance();
+    return $EE->db->escape_str($string);
 }
 
 // Return the number of rows in a particular query.
@@ -245,8 +245,8 @@ function bb2_db_num_rows($result)
 // Bad Behavior will use the return value here in other callbacks.
 function bb2_db_query($query)
 {
-	$EE =& get_instance();
-	return $EE->db->query($query);
+    $EE =& get_instance();
+    return $EE->db->query($query);
 }
 
 // Return all rows in a particular query.
@@ -254,7 +254,7 @@ function bb2_db_query($query)
 // or equivalent and appending the result of each call to an array.
 function bb2_db_rows($result)
 {
-	if ($result->num_rows() > 0)
+    if ($result->num_rows() > 0)
     {
         return $results->result_array() ;
     }
@@ -263,42 +263,42 @@ function bb2_db_rows($result)
 // Create the SQL query for inserting a record in the database.
 function bb2_insert($settings, $package, $key)
 {
-	$ip = bb2_db_escape($package['ip']);
-	$date = bb2_db_date();
-	$request_method = bb2_db_escape($package['request_method']);
-	$request_uri = bb2_db_escape($package['request_uri']);
-	$server_protocol = bb2_db_escape($package['server_protocol']);
-	$user_agent = bb2_db_escape($package['user_agent']);
-	$headers = "$request_method $request_uri $server_protocol\n";
-	foreach ($package['headers'] as $h => $v) {
-		$headers .= bb2_db_escape("$h: $v\n");
-	}
-	$request_entity = "";
-	if (!strcasecmp($request_method, "POST")) {
-		foreach ($package['request_entity'] as $h => $v) {
-			$request_entity .= bb2_db_escape("$h: $v\n");
-		}
-	}
-	return "INSERT INTO `" . bb2_db_escape($settings['log_table']) . "`
-		(`ip`, `date`, `request_method`, `request_uri`, `server_protocol`, `http_headers`, `user_agent`, `request_entity`, `key`) VALUES
-		('$ip', '$date', '$request_method', '$request_uri', '$server_protocol', '$headers', '$user_agent', '$request_entity', '$key')";
+    $ip = bb2_db_escape($package['ip']);
+    $date = bb2_db_date();
+    $request_method = bb2_db_escape($package['request_method']);
+    $request_uri = bb2_db_escape($package['request_uri']);
+    $server_protocol = bb2_db_escape($package['server_protocol']);
+    $user_agent = bb2_db_escape($package['user_agent']);
+    $headers = "$request_method $request_uri $server_protocol\n";
+    foreach ($package['headers'] as $h => $v) {
+        $headers .= bb2_db_escape("$h: $v\n");
+    }
+    $request_entity = "";
+    if (!strcasecmp($request_method, "POST")) {
+        foreach ($package['request_entity'] as $h => $v) {
+            $request_entity .= bb2_db_escape("$h: $v\n");
+        }
+    }
+    return "INSERT INTO `" . bb2_db_escape($settings['log_table']) . "`
+        (`ip`, `date`, `request_method`, `request_uri`, `server_protocol`, `http_headers`, `user_agent`, `request_entity`, `key`) VALUES
+        ('$ip', '$date', '$request_method', '$request_uri', '$server_protocol', '$headers', '$user_agent', '$request_entity', '$key')";
 }
 
 // Return emergency contact email address.
 function bb2_email()
 {
-	$EE =& get_instance();
-	return $EE->config->item('webmaster_email');
+    $EE =& get_instance();
+    return $EE->config->item('webmaster_email');
 }
 
 // retrieve settings from database
 function bb2_read_settings()
 {
-	$EE =& get_instance();
-	$saved_settings = array();
-	
-	// Ugh, we have to go through this whole rigamarole to get the settings,
-	// since we're not inside the extension's object.
+    $EE =& get_instance();
+    $saved_settings = array();
+
+    // Ugh, we have to go through this whole rigamarole to get the settings,
+    // since we're not inside the extension's object.
     if (isset($EE->extensions->extensions['sessions_start']))
     {
         foreach($EE->extensions->extensions['sessions_start'] as $priority => $extension)
@@ -309,7 +309,7 @@ function bb2_read_settings()
                 if ($extension['Vz_bad_behavior_ext']['1'] != '')
                 {
                     $settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
-                    
+
                     // Convert strings to booleans
                     foreach ($settings as $key => $value)
                     {
@@ -322,26 +322,26 @@ function bb2_read_settings()
                             $settings[$key] = FALSE;
                         }
                     }
-                    
+
                     // TODO: Implement the reverse_proxy option in CP
                     $settings['reverse_proxy'] = FALSE;
-                    
+
                     return $settings;
                 }
-			}
-		}
-	}
-	
-	// Couldn't get the settings, oh well
-	return FALSE;
+            }
+        }
+    }
+
+    // Couldn't get the settings, oh well
+    return FALSE;
 }
 
 // retrieve whitelist
 function bb2_read_whitelist() {
     $settings = bb2_read_settings();
     return array(
-	   'ip' => array_filter(explode("\n", $settings['whitelisted_ips'])),
-	   'url' => array_filter(explode("\n", $settings['whitelisted_urls']))
+       'ip' => array_filter(explode("\n", $settings['whitelisted_ips'])),
+       'url' => array_filter(explode("\n", $settings['whitelisted_urls']))
     );
 }
 
@@ -349,14 +349,14 @@ function bb2_read_whitelist() {
 function bb2_write_settings($settings)
 {
     // Not needed, since we have a control panel for changing settings
-	return FALSE;
+    return FALSE;
 }
 
 // installation
 function bb2_install()
 {
-	// We are creating the table in the extension's "enable" function
-	return FALSE;
+    // We are creating the table in the extension's "enable" function
+    return FALSE;
 }
 
 // Screener
@@ -365,22 +365,22 @@ function bb2_install()
 // if you don't use it.
 function bb2_insert_head()
 {
-	global $bb2_javascript;
-	echo $bb2_javascript;
+    global $bb2_javascript;
+    echo $bb2_javascript;
 }
 
 // Display stats? This is optional.
 function bb2_insert_stats($force = TRUE)
 {
-	return FALSE;
+    return FALSE;
 }
 
 // Return the top-level relative path of wherever we are (for cookies)
 // You should provide in $url the top-level URL for your site.
 function bb2_relative_path()
 {
-	$EE =& get_instance();
-	return str_replace('//', '/', $EE->config->item('cookie_path').'/');
+    $EE =& get_instance();
+    return str_replace('//', '/', $EE->config->item('cookie_path').'/');
 }
 
 /* End of file ext.vz_bad_behavior.php */
