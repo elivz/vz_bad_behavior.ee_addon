@@ -8,7 +8,7 @@
             <th scope="col"><?= lang('user_agent') ?></th>
             <th scope="col"><?= lang('key') ?></th>
     </thead>
-    
+
     <tbody>
     <?php foreach ($blocked as $i => $request) : ?>
         <tr<?php if ($i % 2 == 0) echo ' class="odd"' ?>>

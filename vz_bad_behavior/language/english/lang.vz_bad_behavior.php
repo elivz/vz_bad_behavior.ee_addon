@@ -2,36 +2,36 @@
 
 $lang = array(
 
-    // Settings labels
-    'fine_tuning'          => 'Fine Tuning',
-	'strict'               => 'Strict Mode',
-	'strict_desc'          => 'Runs additional checks, but may block some government or corporate visitors.',
-	'offsite_forms'        => 'Allow off-site posting to forms',
-	'offsite_desc'         => 'Usually only needed if you support OpenID or are running an API that accepts form data from other websites.',
-	'whitelisted_ips'      => 'Whitelisted IPs',
-	'whitelist_ips_desc'   => 'Visitors from these IP addresses will always be allowed. One IP address per line.',
-	'whitelisted_urls'     => 'Whitelisted URIs',
-	'whitelist_urls_desc'  => 'Visits to these urls will always be allowed. One URI (or partial URI) per line. You may also enclose a pattern with tildes to perform regular expression matching, e.g. <code>~/blog/\\\d{4}(/\\\d{2})?$~i</code><br/><br/>Note that the trailing slash (if there is one) is stripped before matching.',
-	
-	'httpbl'               => 'http:BL Settings',
-	'httpbl_key'           => 'http:BL API Key',
-	'httpbl_key_desc'      => 'Bad Behavior can optionally use Project Honey Pot\'s http:BL service to check visitor IP addresses against a known list of spammers. You will need an <a href="http://www.projecthoneypot.org/">API key</a> from Project Honey Pot to enable this feature.',
-	'httpbl_threat'        => 'http:BL Threat Level',
-	'httpbl_threat_desc'   => 'If the Project Honey Pot rates a given IP address above this level, it will be blocked. <a href="http://www.projecthoneypot.org/threat_info.php">Read more about how this works</a>.',
-	'httpbl_maxage'        => 'http:BL Maximum Age',
-	'httpbl_maxage_desc'   => 'If no spam activity has been detected in at least this many days, allow traffic from the IP address.',
-	
-	'num_blocked'          => "Bad Behavior has blocked %s access attempts in the past week.",
-	'display_logs'         => "Display detailed logs",
-	'date'                 => "Date",
-	'ip'                   => "IP Address",
-	'uri'                  => "Request URI",
-	'method'               => "Request Method",
-	'protocol'             => "Server Protocol",
-	'user_agent'           => "User Agent",
-	'key'                  => "Technical Support Key",
-    
-	'' => ''
+// Settings labels
+'fine_tuning'          => 'Fine Tuning',
+'strict'               => 'Strict Mode',
+'strict_desc'          => 'Runs additional checks, but may block some government or corporate visitors.',
+'offsite_forms'        => 'Allow off-site posting to forms',
+'offsite_desc'         => 'Usually only needed if you support OpenID or are running an API that accepts form data from other websites.',
+'whitelisted_ips'      => 'Whitelisted IPs',
+'whitelist_ips_desc'   => 'Visitors from these IP addresses will always be allowed. One IP address per line.',
+'whitelisted_urls'     => 'Whitelisted URIs',
+'whitelist_urls_desc'  => 'Visits to these urls will always be allowed. One URI (or partial URI) per line. You may also enclose a pattern with tildes to perform regular expression matching, e.g. <code>~/blog/\\\d{4}(/\\\d{2})?$~i</code><br/><br/>Note that the trailing slash (if there is one) is stripped before matching.',
+
+'httpbl'               => 'http:BL Settings',
+'httpbl_key'           => 'http:BL API Key',
+'httpbl_key_desc'      => 'Bad Behavior can optionally use Project Honey Pot\'s http:BL service to check visitor IP addresses against a known list of spammers. You will need an <a href="http://www.projecthoneypot.org/">API key</a> from Project Honey Pot to enable this feature.',
+'httpbl_threat'        => 'http:BL Threat Level',
+'httpbl_threat_desc'   => 'If the Project Honey Pot rates a given IP address above this level, it will be blocked. <a href="http://www.projecthoneypot.org/threat_info.php">Read more about how this works</a>.',
+'httpbl_maxage'        => 'http:BL Maximum Age',
+'httpbl_maxage_desc'   => 'If no spam activity has been detected in at least this many days, allow traffic from the IP address.',
+
+'num_blocked'          => "Bad Behavior has blocked %s access attempts in the past week.",
+'display_logs'         => "Display detailed logs",
+'date'                 => "Date",
+'ip'                   => "IP Address",
+'uri'                  => "Request URI",
+'method'               => "Request Method",
+'protocol'             => "Server Protocol",
+'user_agent'           => "User Agent",
+'key'                  => "Technical Support Key",
+
+'' => ''
 );
 
 /* End of file lang.vz_bad_behavior.php */
