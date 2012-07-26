@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.3.0';
+    public $version         = '1.3.1';
 
     private $EE;
 
@@ -297,6 +297,21 @@ function bb2_read_settings()
     $EE =& get_instance();
     $saved_settings = array();
 
+    // Is the Cookie Consent extension enabled?
+    $reject_cookies = FALSE;
+    if (isset($EE->extensions->extensions['set_cookie_end']))
+    {
+        foreach($EE->extensions->extensions['set_cookie_end'] as $priority => $extension)
+        {
+            if (isset($extension['Cookie_consent_ext']))
+            {
+                // The extension is enabled, but is it set to reject cookies?
+                $reject_cookes = ! $EE->input->cookie('cookies_allowed');
+            }
+        }
+    }
+
+
     // Ugh, we have to go through this whole rigamarole to get the settings,
     // since we're not inside the extension's object.
     if (isset($EE->extensions->extensions['sessions_start']))
@@ -325,6 +340,9 @@ function bb2_read_settings()
 
                     // TODO: Implement the reverse_proxy option in CP
                     $settings['reverse_proxy'] = FALSE;
+
+                    // If the Cookie Consent module is enabled and set to "no cookies", don't use them
+                    $settings['eu_cookie'] = $reject_cookies;
 
                     return $settings;
                 }
