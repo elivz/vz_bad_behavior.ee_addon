@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.3.1';
+    public $version         = '1.3.2';
 
     private $EE;
 
@@ -200,6 +200,7 @@ class Vz_bad_behavior_ext {
 
         // Get the recently blocked list
         $blocked = $this->EE->db->query("SELECT * FROM " . $this->settings['log_table'] . " WHERE `key` NOT LIKE '00000000' ORDER BY `date` DESC")->result_array();
+
         $data = array(
             'blocked' => $blocked
         );
