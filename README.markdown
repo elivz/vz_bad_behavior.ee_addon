@@ -11,3 +11,8 @@ Installation
 ------------
 
 Download and unzip the extension. Upload the "vz_bad_behavior" folder to your /system/expression_engine/third_party/ folder. Finally, enable the extension in your control panel. There are some settings you can use to fine-tune the script, but generally it will work well out of the box.
+
+Roadmap
+-------
+
+* Add support for reverse proxies to allow VZ Bad Behavior's use behind Varnish and other front-end caching systems.
