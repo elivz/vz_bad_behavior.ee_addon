@@ -1,11 +1,16 @@
 <?php
     echo form_open('C=addons_extensions'.AMP.'M=save_extension_settings'.AMP.'file=vz_bad_behavior');
-    
+
     $this->table->set_template($cp_pad_table_template);
-    
+
     $this->table->set_heading(
         array('data' => lang('fine_tuning'), 'style' => 'width:50%;'),
         lang('setting')
+    );
+    $this->table->add_row(
+        lang('logging', 'logging') . '<p>'.lang('logging_desc').'</p>',
+        '<input type="hidden" name="logging" value="n" />' .
+        form_checkbox('logging', 'y', ($settings['logging'] == 'y'), 'id="logging"')
     );
     $this->table->add_row(
         lang('strict', 'strict') . '<p>'.lang('strict_desc').'</p>',
@@ -25,12 +30,12 @@
         lang('whitelisted_urls', 'whitelisted_urls') . '<p>'.lang('whitelist_urls_desc').'</p>',
         form_textarea(array('name'=>'whitelisted_urls', 'value'=>$settings['whitelisted_urls'], 'id'=>'whitelisted_urls', 'rows'=>'5'))
     );
-    
+
     echo $this->table->generate();
     $this->table->clear();
-    
+
     $this->table->set_template($cp_pad_table_template);
-    
+
     $this->table->set_heading(
         array('data' => lang('httpbl'), 'style' => 'width:50%;'),
         lang('setting')
@@ -52,7 +57,6 @@
 <?= $this->table->generate() ?>
 <?php $this->table->clear() ?>
 
-<?= form_hidden('logging', $settings['logging']) ?>
 <?= form_hidden('verbose', $settings['verbose']) ?>
 <?= form_hidden('log_table', $settings['log_table']) ?>
 
@@ -60,25 +64,27 @@
 
 <?= form_close() ?>
 
-<!-- Blocked visits report -->
+<?php if ($settings['logging'] == 'y') : ?>
+    <!-- Blocked visits report -->
 
-<h2 style="padding:30px 0 10px"><?php printf(lang('num_blocked'), $blocked_count) ?></h2>
+    <h2 style="padding:30px 0 10px"><?php printf(lang('num_blocked'), $blocked_count) ?></h2>
 
-<p><a href="#" id="show_bb_logs"><?= lang('display_logs') ?></a></p>
-<div id="bb_logs" style="display:none"></div>
-<script type="text/javascript">
-    $('#show_bb_logs').click(function() {
-        $(this).parent().hide();
-        $('#bb_logs').load(
-            '<?= $base_url ?>?bb_logs=1',
-            function() {
-                $("table.col-sortable").tablesorter();
-                $('#bb_logs').slideDown();
-            }
-        );
-        return false;
-    })
-</script>
+    <p><a href="#" id="show_bb_logs"><?= lang('display_logs') ?></a></p>
+    <div id="bb_logs" style="display:none"></div>
+    <script type="text/javascript">
+        $('#show_bb_logs').click(function() {
+            $(this).parent().hide();
+            $('#bb_logs').load(
+                '<?= $base_url ?>?bb_logs=1',
+                function() {
+                    $("table.col-sortable").tablesorter();
+                    $('#bb_logs').slideDown();
+                }
+            );
+            return false;
+        })
+    </script>
+<?php endif; ?>
 
 <?php
 /* End of file index.php */

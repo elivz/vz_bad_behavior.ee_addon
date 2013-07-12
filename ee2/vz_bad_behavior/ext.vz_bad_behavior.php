@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.3.3';
+    public $version         = '1.4';
 
     private $EE;
 
@@ -69,7 +69,7 @@ class Vz_bad_behavior_ext {
 
         // Create the table for BB to store its data
         $this->EE->db->query(
-            "CREATE TABLE IF NOT EXISTS `".$this->EE->db->dbprefix.'bad_behavior'."` (
+            "CREATE TABLE IF NOT EXISTS `".$this->settings['log_table']."` (
             `id` INT(11) NOT NULL auto_increment,
             `ip` TEXT NOT NULL,
             `date` DATETIME NOT NULL default '0000-00-00 00:00:00',
@@ -158,6 +158,12 @@ class Vz_bad_behavior_ext {
         // Save the settings to the database
         $this->EE->db->where('class', __CLASS__);
         $this->EE->db->update('extensions', array('settings' => serialize($_POST)));
+
+        // Remove logs when they are turned off
+        if ($_POST['logging'] != 'y')
+        {
+            $this->EE->db->truncate($this->EE->db->dbprefix.'bad_behavior');
+        }
 
         $this->EE->session->set_flashdata(
             'message_success',

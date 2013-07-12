@@ -4,6 +4,8 @@ $lang = array(
 
 // Settings labels
 'fine_tuning'          => 'Fine Tuning',
+'logging'              => 'Enable Logs?',
+'logging_desc'         => 'You can turn this off for very busy sites to decrease your database usage, but you will have no way to troubleshoot false positives.',
 'strict'               => 'Strict Mode',
 'strict_desc'          => 'Runs additional checks, but may block some government or corporate visitors.',
 'offsite_forms'        => 'Allow off-site posting to forms',
