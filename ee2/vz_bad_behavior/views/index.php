@@ -8,6 +8,11 @@
         lang('setting')
     );
     $this->table->add_row(
+        lang('enabled', 'enabled'),
+        '<input type="hidden" name="enabled" value="n" />' .
+        form_checkbox('enabled', 'y', ($settings['enabled'] == 'y'), 'id="enabled"')
+    );
+    $this->table->add_row(
         lang('logging', 'logging') . '<p>'.lang('logging_desc').'</p>',
         '<input type="hidden" name="logging" value="n" />' .
         form_checkbox('logging', 'y', ($settings['logging'] == 'y'), 'id="logging"')

@@ -32,6 +32,7 @@ class Vz_bad_behavior_ext {
     }
 
     private $default_settings = array(
+        'enabled' => 'y',
         'verbose' => 'n',
         'logging' => 'y',
         'display_stats' => 'y',
@@ -131,8 +132,9 @@ class Vz_bad_behavior_ext {
             ->query("SELECT COUNT(*) as count FROM " . $settings['log_table'] . " WHERE `key` NOT LIKE '00000000'")
             ->row('count');
 
-        // Merge with the default settings to prevent upgrade errors
-        $settings = array_merge($this->default_settings, $settings);
+        // Merge with the default settings and anything set in config.php
+        $global_settings = (array) $this->EE->config->item('vz_bad_behavior');
+        $settings = array_merge($this->default_settings, $settings, $global_settings);
 
         $data = array(
             'base_url'      => preg_replace("/https?:/", '', $this->EE->functions->fetch_site_index()),
@@ -192,8 +194,11 @@ class Vz_bad_behavior_ext {
         else
         {
             // Calls inward to Bad Behavor itself.
-            require_once(BB2_CWD . "/bad-behavior/core.inc.php");
-            bb2_start(bb2_read_settings());
+            $settings = bb2_read_settings();
+            if ($settings['enabled']) {
+                require_once(BB2_CWD . "/bad-behavior/core.inc.php");
+                bb2_start($settings);
+            }
         }
     }
 
@@ -321,6 +326,8 @@ function bb2_read_settings()
         }
     }
 
+    // Get any config variables that were set in config.php
+    $global_settings = (array) $EE->config->item('vz_bad_behavior');
 
     // Ugh, we have to go through this whole rigamarole to get the settings,
     // since we're not inside the extension's object.
@@ -335,6 +342,9 @@ function bb2_read_settings()
                 {
                     $settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
 
+                    // Default to enabled
+                    if ($settings['enabled'] !== 'n') $settings['enabled'] = 'y';
+
                     // Convert strings to booleans
                     foreach ($settings as $key => $value)
                     {
@@ -342,7 +352,7 @@ function bb2_read_settings()
                         {
                             $settings[$key] = TRUE;
                         }
-                        elseif ($value == 'n')
+                        elseif ($value === 'n')
                         {
                             $settings[$key] = FALSE;
                         }
@@ -350,6 +360,9 @@ function bb2_read_settings()
 
                     // If the Cookie Consent module is enabled and set to "no cookies", don't use them
                     $settings['eu_cookie'] = $reject_cookies;
+
+                    // Values in config.php override those in the database
+                    $settings = array_merge($settings, $global_settings);
 
                     return $settings;
                 }

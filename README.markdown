@@ -12,7 +12,20 @@ Installation
 
 Download and unzip the extension. Upload the "vz_bad_behavior" folder to your /system/expression_engine/third_party/ folder. Finally, enable the extension in your control panel. There are some settings you can use to fine-tune the script, but generally it will work well out of the box.
 
-Roadmap
--------
+Configuration
+-------------
 
-* Add support for reverse proxies to allow VZ Bad Behavior's use behind Varnish and other front-end caching systems.
+All options are configurable through the extension's control panel page. If you prefer, you may also set the options via your configuration file (for example, if you want different settings on your development vs. you production server). All of the available options are listed here:
+
+    $config['vz_bad_behavior']['enabled'] = 'y';
+    $config['vz_bad_behavior']['logging'] = 'y';
+    $config['vz_bad_behavior']['strict'] = 'n';
+    $config['vz_bad_behavior']['offsite_forms'] = 'n';
+    $config['vz_bad_behavior']['whitelisted_ips'] = '';
+    $config['vz_bad_behavior']['whitelisted_urls'] = '';
+    $config['vz_bad_behavior']['reverse_proxy'] = 'n';
+    $config['vz_bad_behavior']['reverse_proxy_header'] = 'X-Forwarded-For';
+    $config['vz_bad_behavior']['reverse_proxy_addresses'] = '127.0.0.1';
+    $config['vz_bad_behavior']['httpbl_key'] => '';
+    $config['vz_bad_behavior']['httpbl_threat'] = '25';
+    $config['vz_bad_behavior']['httpbl_maxage'] = '30';
