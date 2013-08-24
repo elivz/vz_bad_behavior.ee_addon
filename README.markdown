@@ -15,7 +15,7 @@ Download and unzip the extension. Upload the "vz_bad_behavior" folder to your /s
 Configuration
 -------------
 
-All options are configurable through the extension's control panel page. If you prefer, you may also set the options via your configuration file (for example, if you want different settings on your development vs. you production server). All of the available options are listed here:
+All options are configurable through the extension's control panel page. If you prefer, you may also set the options via your configuration file (for example, if you want different settings on your development vs. you production server). Settings in config.php will override anything you have set through the control panel. All of the available options are listed here:
 
     $config['vz_bad_behavior']['enabled'] = 'y';
     $config['vz_bad_behavior']['logging'] = 'y';
