@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.4';
+    public $version         = '1.5';
 
     private $EE;
 
@@ -42,6 +42,9 @@ class Vz_bad_behavior_ext {
         'offsite_forms' => 'n',
         'whitelisted_ips' => '',
         'whitelisted_urls' => '',
+        'reverse_proxy' => FALSE,
+        'reverse_proxy_header' => 'X-Forwarded-For',
+        'reverse_proxy_addresses' => '127.0.0.1'
     );
 
     // ----------------------------------------------------------------------
@@ -313,7 +316,7 @@ function bb2_read_settings()
             if (isset($extension['Cookie_consent_ext']))
             {
                 // The extension is enabled, but is it set to reject cookies?
-                $reject_cookes = ! $EE->input->cookie('cookies_allowed');
+                $reject_cookies = ! $EE->input->cookie('cookies_allowed');
             }
         }
     }
@@ -344,9 +347,6 @@ function bb2_read_settings()
                             $settings[$key] = FALSE;
                         }
                     }
-
-                    // TODO: Implement the reverse_proxy option in CP
-                    $settings['reverse_proxy'] = FALSE;
 
                     // If the Cookie Consent module is enabled and set to "no cookies", don't use them
                     $settings['eu_cookie'] = $reject_cookies;

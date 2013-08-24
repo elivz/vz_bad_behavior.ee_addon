@@ -34,6 +34,43 @@
     echo $this->table->generate();
     $this->table->clear();
 
+
+    $this->table->set_template($cp_pad_table_template);
+
+    $this->table->set_heading(
+        array('data' => lang('rev_proxy'), 'style' => 'width:50%;'),
+        lang('setting')
+    );
+    $this->table->add_row(
+        lang('enable_rev_proxy', 'enable_rev_proxy') . '<p>'.lang('rev_proxy_desc').'</p>',
+        '<input type="hidden" name="reverse_proxy" value="n" />' .
+        form_checkbox('reverse_proxy', 'y', ($settings['reverse_proxy'] == 'y'), 'id="reverse_proxy"')
+    );
+    $this->table->add_row(
+        array(
+            'data' => lang('rev_proxy_header', 'reverse_proxy_header') . '<p>'.lang('rev_proxy_header_desc').'</p>',
+            'class' => 'rev_proxy_options'
+        ),
+        array(
+            'data' => form_input('reverse_proxy_header', $settings['reverse_proxy_header'], 'id="reverse_proxy_header" class="rev_proxy_options"'),
+            'class' => 'rev_proxy_options',
+        )
+    );
+    $this->table->add_row(
+        array(
+            'data' => lang('rev_proxy_ips', 'reverse_proxy_addresses') . '<p>'.lang('rev_proxy_ips_desc').'</p>',
+            'class' => 'rev_proxy_options'
+        ),
+        array(
+            'data' => form_textarea(array('name'=>'reverse_proxy_addresses', 'value'=>$settings['reverse_proxy_addresses'], 'id'=>'reverse_proxy_addresses', 'rows'=>'4')),
+            'class' => 'rev_proxy_options'
+        )
+    );
+
+    echo $this->table->generate();
+    $this->table->clear();
+
+
     $this->table->set_template($cp_pad_table_template);
 
     $this->table->set_heading(
@@ -60,9 +97,17 @@
 <?= form_hidden('verbose', $settings['verbose']) ?>
 <?= form_hidden('log_table', $settings['log_table']) ?>
 
-<p><?=form_submit('submit', lang('submit'), 'class="submit"')?></p>
+<p><?= form_submit('submit', lang('submit'), 'class="submit"') ?></p>
 
 <?= form_close() ?>
+
+<script type="text/javascript">
+    function toggle_proxy_options() {
+        $('.rev_proxy_options').toggle($('#reverse_proxy').is(':checked'));
+    };
+    $('#reverse_proxy').change(toggle_proxy_options);
+    toggle_proxy_options();
+</script>
 
 <?php if ($settings['logging'] == 'y') : ?>
     <!-- Blocked visits report -->
