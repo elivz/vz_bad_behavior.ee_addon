@@ -343,7 +343,7 @@ function bb2_read_settings()
                     $settings = unserialize($extension['Vz_bad_behavior_ext']['1']);
 
                     // Default to enabled
-                    if ($settings['enabled'] !== 'n') $settings['enabled'] = 'y';
+                    if (empty($settings['enabled']) || $settings['enabled'] !== 'n') $settings['enabled'] = 'y';
 
                     // Convert strings to booleans
                     foreach ($settings as $key => $value)
