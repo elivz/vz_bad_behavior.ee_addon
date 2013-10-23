@@ -18,20 +18,20 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.5';
+    public $version         = '1.5.1';
 
     private $EE;
 
     /**
      * Constructor
      */
-    public function __construct($settings = '')
+    public function __construct($settings='')
     {
         $this->EE =& get_instance();
         $this->settings = $settings;
     }
 
-    private $default_settings = array(
+    public static $default_settings = array(
         'enabled' => 'y',
         'verbose' => 'n',
         'logging' => 'y',
@@ -134,7 +134,7 @@ class Vz_bad_behavior_ext {
 
         // Merge with the default settings and anything set in config.php
         $global_settings = (array) $this->EE->config->item('vz_bad_behavior');
-        $settings = array_merge($this->default_settings, $settings, $global_settings);
+        $settings = array_merge(Vz_bad_behavior_ext::$default_settings, $settings, $global_settings);
 
         $data = array(
             'base_url'      => preg_replace("/https?:/", '', $this->EE->functions->fetch_site_index()),
@@ -326,6 +326,9 @@ function bb2_read_settings()
         }
     }
 
+    // Fall back to the default settings if nothing else
+    $default_settings = Vz_bad_behavior_ext::$default_settings;
+
     // Get any config variables that were set in config.php
     $global_settings = (array) $EE->config->item('vz_bad_behavior');
 
@@ -362,7 +365,7 @@ function bb2_read_settings()
                     $settings['eu_cookie'] = $reject_cookies;
 
                     // Values in config.php override those in the database
-                    $settings = array_merge($settings, $global_settings);
+                    $settings = array_merge($default_settings, $settings, $global_settings);
 
                     return $settings;
                 }
