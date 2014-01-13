@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.5.1';
+    public $version         = '1.5.2';
 
     private $EE;
 
@@ -56,7 +56,7 @@ class Vz_bad_behavior_ext {
     public function activate_extension()
     {
         // Setup custom settings in this array.
-        $this->settings = $this->default_settings;
+        $this->settings = Vz_bad_behavior_ext::$default_settings;
         $this->settings['log_table'] = $this->EE->db->dbprefix.'bad_behavior';
 
         $data = array(
