@@ -35,7 +35,7 @@ function bb2_approved($settings, $package)
 	}
 
 	// Decide what to log on approved requests.
-	if (($settings['verbose'] && $settings['logging']) || empty($package['user_agent'])) {
+	if (($settings['verbose'] && $settings['logging'])) {
 		bb2_db_query(bb2_insert($settings, $package, "00000000"));
 	}
 }
