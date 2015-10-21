@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext {
     public $docs_url        = 'http://elivz.com/blog/single/bad_behavior/';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.5.4';
+    public $version         = '1.5.5';
 
     private $EE;
 
@@ -348,6 +348,9 @@ function bb2_read_settings()
                     // Default to enabled
                     if (empty($settings['enabled']) || $settings['enabled'] !== 'n') $settings['enabled'] = 'y';
 
+                    // Values in config.php override those in the database
+                    $settings = array_merge($default_settings, $settings, $global_settings);
+
                     // Convert strings to booleans
                     foreach ($settings as $key => $value)
                     {
@@ -363,9 +366,6 @@ function bb2_read_settings()
 
                     // If the Cookie Consent module is enabled and set to "no cookies", don't use them
                     $settings['eu_cookie'] = $reject_cookies;
-
-                    // Values in config.php override those in the database
-                    $settings = array_merge($default_settings, $settings, $global_settings);
 
                     return $settings;
                 }
