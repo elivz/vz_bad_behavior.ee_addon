@@ -10,7 +10,9 @@ The extension settings page also displays detailed logs for the past week (which
 Installation
 ------------
 
-Download and unzip the extension. Upload the "vz_bad_behavior" folder to your /system/expression_engine/third_party/ folder. Finally, enable the extension in your control panel. There are some settings you can use to fine-tune the script, but generally it will work well out of the box.
+VZ Bad Behavior is compatible with ExpressionEngine 2.6+ and 3.x.
+
+Download and unzip the extension. Upload the `vz_bad_behavior` folder to your `third_party` folder. Finally, enable the extension in your control panel. There are some settings you can use to fine-tune the script, but generally it will work well out of the box.
 
 Configuration
 -------------
@@ -29,3 +31,8 @@ All options are configurable through the extension's control panel page. If you 
     $config['vz_bad_behavior']['httpbl_key'] => '';
     $config['vz_bad_behavior']['httpbl_threat'] = '25';
     $config['vz_bad_behavior']['httpbl_maxage'] = '30';
+
+Acknowlegements
+---------------
+
+Thanks to [ilab crossmedia](http://www.ilab.at) for contributing the low-level work to get this running in ExpressionEngine 3.x.
