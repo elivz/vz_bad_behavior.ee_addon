@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext
     public $docs_url        = 'https://github.com/elivz/vz_bad_behavior.ee_addon';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '1.6.0';
+    public $version         = '2.0.0';
 
     /**
      * Constructor
@@ -30,19 +30,19 @@ class Vz_bad_behavior_ext
 
     public static $default_settings = array(
         'enabled' => 'y',
-        'verbose' => 'n',
         'logging' => 'y',
-        'display_stats' => 'y',
         'strict' => 'n',
-        'httpbl_key' => '',
-        'httpbl_threat' => '25',
-        'httpbl_maxage' => '30',
         'offsite_forms' => 'n',
         'whitelisted_ips' => '',
         'whitelisted_urls' => '',
         'reverse_proxy' => FALSE,
         'reverse_proxy_header' => 'X-Forwarded-For',
-        'reverse_proxy_addresses' => '127.0.0.1'
+        'reverse_proxy_addresses' => '127.0.0.1',
+        'httpbl_key' => '',
+        'httpbl_threat' => '25',
+        'httpbl_maxage' => '30',
+        'verbose' => 'n',
+        'display_stats' => 'y',
     );
 
     // ----------------------------------------------------------------------
@@ -181,12 +181,9 @@ class Vz_bad_behavior_ext
     public function bad_behavior($session)
     {
         // Check for the special query string that means we want the log
-        if ( isset($_GET['bb_logs']) && AJAX_REQUEST && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior') )
+        if (isset($_GET['bb_logs']) && AJAX_REQUEST && stristr($_SERVER['HTTP_REFERER'], 'vz_bad_behavior'))
         {
-            echo $this->_logs();
-
-            // Kill further processing
-            die();
+            exit($this->_logs());
         }
         else
         {
@@ -210,11 +207,13 @@ class Vz_bad_behavior_ext
         ee()->lang->loadfile('vz_bad_behavior');
 
         // Get the recently blocked list
-        $blocked = ee()->db->query("SELECT * FROM " . $this->settings['log_table'] . " WHERE `key` NOT LIKE '00000000' ORDER BY `date` DESC")->result_array();
+        $blocked = ee()->db->query("
+            SELECT * FROM {$this->settings['log_table']}
+            WHERE `key` NOT LIKE '00000000'
+            ORDER BY `date` DESC
+        ")->result_array();
 
-        $data = array(
-            'blocked' => $blocked
-        );
+        $data = array('blocked' => $blocked);
 
         return ee()->load->view('logs', $data, TRUE);
     }

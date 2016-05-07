@@ -164,7 +164,7 @@ if ($settings['logging'] == 'y') {
     ee()->javascript->output("
         $(function() {
             $('#show_bb_logs').click(function() {
-                $(this).parent().remove();
+                $(this).remove();
                 $('#bb_logs').load(
                     '$logs_url?bb_logs=1',
                     function() {
@@ -178,7 +178,7 @@ if ($settings['logging'] == 'y') {
     ");
 
     echo '<h2 style="padding:30px 0 10px">' . sprintf(lang('num_blocked'), $blocked_count) . '</h2>';
-    echo '<p><a href="#" id="show_bb_logs">' . lang('display_logs') . '</a></p>';
+    echo '<a href="#" id="show_bb_logs" class="btn">' . lang('display_logs') . '</a>';
     echo '<div id="bb_logs" style="display:none"></div>';
 }
 

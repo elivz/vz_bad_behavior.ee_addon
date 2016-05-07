@@ -10,7 +10,7 @@
 
 if ( ! defined('VZ_BAD_BEHAVIOR_VERSION'))
 {
-    define('VZ_BAD_BEHAVIOR_VERSION', '1.6.0');
+    define('VZ_BAD_BEHAVIOR_VERSION', '2.0.0');
 }
 
 return array(
@@ -20,5 +20,5 @@ return array(
     'description'    => 'EE implementation of the spam-blocking Bad Behavior script.',
     'version'        => VZ_BAD_BEHAVIOR_VERSION,
     'namespace'      => 'Vz\Bad_Behavior',
-    'settings_exist' => TRUE
+    'settings_exist' => TRUE,
 );

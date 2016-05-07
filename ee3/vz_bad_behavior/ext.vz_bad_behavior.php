@@ -1,5 +1,4 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-define('BB2_CWD', dirname(__FILE__));
 
 /**
  * VZ Bad Behavior Extension
@@ -10,6 +9,8 @@ define('BB2_CWD', dirname(__FILE__));
  * @author      Eli Van Zoeren, ilab
  * @link        http://elivz.com
  */
+
+define('BB2_CWD', dirname(__FILE__));
 
 class Vz_bad_behavior_ext
 {
@@ -30,19 +31,19 @@ class Vz_bad_behavior_ext
 
     public static $default_settings = array(
         'enabled' => 'y',
-        'verbose' => 'n',
         'logging' => 'y',
-        'display_stats' => 'y',
         'strict' => 'n',
-        'httpbl_key' => '',
-        'httpbl_threat' => '25',
-        'httpbl_maxage' => '30',
         'offsite_forms' => 'n',
         'whitelisted_ips' => '',
         'whitelisted_urls' => '',
-        'reverse_proxy' => 'n',
+        'reverse_proxy' => FALSE,
         'reverse_proxy_header' => 'X-Forwarded-For',
-        'reverse_proxy_addresses' => '127.0.0.1'
+        'reverse_proxy_addresses' => '127.0.0.1',
+        'httpbl_key' => '',
+        'httpbl_threat' => '25',
+        'httpbl_maxage' => '30',
+        'verbose' => 'n',
+        'display_stats' => 'y',
     );
 
     // ----------------------------------------------------------------------
