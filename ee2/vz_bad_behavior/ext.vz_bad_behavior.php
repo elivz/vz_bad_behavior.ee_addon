@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext
     public $docs_url        = 'https://github.com/elivz/vz_bad_behavior.ee_addon';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '2.0.0';
+    public $version         = '2.0.1';
 
     /**
      * Constructor
