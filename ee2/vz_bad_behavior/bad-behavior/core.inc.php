@@ -1,5 +1,5 @@
 <?php if (!defined('BB2_CWD')) die("I said no cheating!");
-define('BB2_VERSION', "2.2.18");
+define('BB2_VERSION', "2.2.19");
 
 // Bad Behavior entry point is bb2_start()
 // If you're reading this, you are probably lost.
@@ -35,7 +35,7 @@ function bb2_approved($settings, $package)
 	}
 
 	// Decide what to log on approved requests.
-	if (($settings['verbose'] && $settings['logging'])) {
+	if (($settings['verbose'] && $settings['logging']) || empty($package['user_agent'])) {
 		bb2_db_query(bb2_insert($settings, $package, "00000000"));
 	}
 }
@@ -48,7 +48,7 @@ function bb2_reverse_proxy($settings, $headers_mixed)
 	if (!array_key_exists($header, $headers_mixed)) {
 		return false;
 	}
-
+	
 	$addrs = @array_reverse(preg_split("/[\s,]+/", $headers_mixed[$header]));
 	# Skip our known reverse proxies and private addresses
 	if (!empty($settings['reverse_proxy_addresses'])) {
