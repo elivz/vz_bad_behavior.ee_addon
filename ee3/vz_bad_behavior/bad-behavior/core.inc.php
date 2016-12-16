@@ -35,7 +35,7 @@ function bb2_approved($settings, $package)
 	}
 
 	// Decide what to log on approved requests.
-	if (($settings['verbose'] && $settings['logging']) || empty($package['user_agent'])) {
+	if ($settings['verbose'] && $settings['logging']) {
 		bb2_db_query(bb2_insert($settings, $package, "00000000"));
 	}
 }
@@ -48,7 +48,7 @@ function bb2_reverse_proxy($settings, $headers_mixed)
 	if (!array_key_exists($header, $headers_mixed)) {
 		return false;
 	}
-	
+
 	$addrs = @array_reverse(preg_split("/[\s,]+/", $headers_mixed[$header]));
 	# Skip our known reverse proxies and private addresses
 	if (!empty($settings['reverse_proxy_addresses'])) {
