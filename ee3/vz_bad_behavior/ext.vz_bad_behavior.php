@@ -237,7 +237,7 @@ function bb2_db_affected_rows()
 function bb2_db_escape($string)
 {
     //xss hinzugefuegt
-    return ee()->db->escape_str(ee()->security->xss_clean($string));
+    return ee()->db->escape_str(ee('Security/XSS')->clean($string));
 }
 
 // Return the number of rows in a particular query.
