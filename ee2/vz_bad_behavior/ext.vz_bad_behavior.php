@@ -18,7 +18,7 @@ class Vz_bad_behavior_ext
     public $docs_url        = 'https://github.com/elivz/vz_bad_behavior.ee_addon';
     public $name            = 'VZ Bad Behavior';
     public $settings_exist  = 'y';
-    public $version         = '2.0.1';
+    public $version         = '2.0.2';
 
     /**
      * Constructor
@@ -377,8 +377,12 @@ function bb2_read_settings()
 function bb2_read_whitelist() {
     $settings = bb2_read_settings();
     return array(
-       'ip' => array_filter(explode("\n", $settings['whitelisted_ips'])),
-       'url' => array_filter(explode("\n", $settings['whitelisted_urls']))
+       'ip' => is_array($settings['whitelisted_ips']) ?
+            $settings['whitelisted_ips'] :
+            array_filter(preg_split("/,|\||\s/", $settings['whitelisted_ips'])),
+       'url' => is_array($settings['whitelisted_urls']) ?
+            $settings['whitelisted_urls'] :
+            array_filter(preg_split("/,|\||\s/", $settings['whitelisted_urls'])),
     );
 }
 

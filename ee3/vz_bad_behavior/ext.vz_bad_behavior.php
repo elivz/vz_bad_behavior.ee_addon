@@ -355,12 +355,15 @@ function bb2_read_settings()
 }
 
 // retrieve whitelist
-function bb2_read_whitelist()
-{
+function bb2_read_whitelist() {
     $settings = bb2_read_settings();
     return array(
-        'ip' => array_filter(explode("\n", $settings['whitelisted_ips'])),
-        'url' => array_filter(explode("\n", $settings['whitelisted_urls']))
+       'ip' => is_array($settings['whitelisted_ips']) ?
+            $settings['whitelisted_ips'] :
+            array_filter(preg_split("/,|\||\s/", $settings['whitelisted_ips'])),
+       'url' => is_array($settings['whitelisted_urls']) ?
+            $settings['whitelisted_urls'] :
+            array_filter(preg_split("/,|\||\s/", $settings['whitelisted_urls'])),
     );
 }
 
