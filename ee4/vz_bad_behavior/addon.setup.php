@@ -10,7 +10,7 @@
 
 if ( ! defined('VZ_BAD_BEHAVIOR_VERSION'))
 {
-    define('VZ_BAD_BEHAVIOR_VERSION', '2.0.11');
+    define('VZ_BAD_BEHAVIOR_VERSION', '2.0.3');
 }
 
 return array(
