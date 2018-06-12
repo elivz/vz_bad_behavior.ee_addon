@@ -14,10 +14,10 @@ function bb2_housekeeping($settings, $package)
 	bb2_db_query($query);
 
 	// Waste a bunch more of the spammer's time, sometimes.
-	if (rand(1,1000) == 1) {
-		$query = "OPTIMIZE TABLE `" . $settings['log_table'] . "`";
-		bb2_db_query($query);
-	}
+	// if (rand(1,1000) == 1) {
+	// 	$query = "OPTIMIZE TABLE `" . $settings['log_table'] . "`";
+	// 	bb2_db_query($query);
+	// }
 }
 
 function bb2_display_denial($settings, $package, $key, $previous_key = false)

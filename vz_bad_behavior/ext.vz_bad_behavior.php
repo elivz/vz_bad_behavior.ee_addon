@@ -84,9 +84,11 @@ class Vz_bad_behavior_ext
             `key` TEXT NOT NULL,
             INDEX (`ip`(15)),
             INDEX (`user_agent`(10)),
-            PRIMARY KEY (`id`) );"
+            PRIMARY KEY (`id`) )
+            CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB;"
         );
-    }
+
+	}
 
     /**
      * Update Extension
